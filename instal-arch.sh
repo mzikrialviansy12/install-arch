@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 #  Arch Linux Auto-Installer Script
-#  Hostname  : my-ArchX86_64
+#  Hostname  : my-Arch
 #  Timezone  : Asia/Jakarta
 #  Locale    : en_US.UTF-8
 #  Bootloader: GRUB (UEFI)
@@ -59,8 +59,8 @@ ROOT_PART="${PART}3"
 # ============================================================
 header "LANGKAH 2: Konfigurasi Ukuran Partisi"
 
-read -rp "Ukuran partisi EFI  (default: 512MiB)  : " EFI_SIZE
-read -rp "Ukuran partisi SWAP (default: 4GiB)    : " SWAP_SIZE
+read -rp "Ukuran partisi EFI  (default: 512M)  : " EFI_SIZE
+read -rp "Ukuran partisi SWAP (default: 4G)    : " SWAP_SIZE
 EFI_SIZE=${EFI_SIZE:-512MiB}
 SWAP_SIZE=${SWAP_SIZE:-4GiB}
 
@@ -133,13 +133,14 @@ header "LANGKAH 6: Instalasi Sistem Dasar (pacstrap)"
 info "Memperbarui keyring pacman..."
 pacman -Sy --noconfirm archlinux-keyring &>/dev/null || true
 
-info "Menjalankan pacstrap..."
+info "Menjalankan pacstrap untuk binary base linux..."
 pacstrap -K /mnt \
     base \
     linux \
     linux-firmware \
     vim \
     htop \
+    openssh \
     fastfetch
 
 success "pacstrap selesai."
@@ -175,19 +176,19 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 # ── Hostname ──────────────────────────────────────────
 echo "[CHROOT] Set hostname"
-echo "my-ArchX86_64" > /etc/hostname
+echo "my-Arch" > /etc/hostname
 
 # ── /etc/hosts ────────────────────────────────────────
 echo "[CHROOT] Konfigurasi /etc/hosts"
 cat > /etc/hosts <<EOF
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   my-ArchX86_64.localdomain my-ArchX86_64
+127.0.1.1   my-Arch.localdomain my-Arch
 EOF
 
 # ── Password root ─────────────────────────────────────
 echo "[CHROOT] Set password root"
-echo "root:qwe123" | chpasswd
+echo "root:awikwok123" | chpasswd
 
 # ── Install GRUB (UEFI) ───────────────────────────────
 echo "[CHROOT] Install GRUB dan efibootmgr"
@@ -224,11 +225,11 @@ info "Unmount semua partisi..."
 umount -R /mnt
 swapoff "$SWAP_PART"
 
-success "Instalasi Arch Linux selesai!"
+success "Instalasi Praktis Arch Linux selesai!"
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}║       INSTALASI BERHASIL! 🎉              ║${NC}"
-echo -e "${BOLD}║  Hostname : my-ArchX86_64                 ║${NC}"
+echo -e "${BOLD}║  Hostname : my-Arch                       ║${NC}"
 echo -e "${BOLD}║  Timezone : Asia/Jakarta                  ║${NC}"
 echo -e "${BOLD}║  Locale   : en_US.UTF-8                   ║${NC}"
 echo -e "${BOLD}║  Bootloader: GRUB (UEFI)                  ║${NC}"
